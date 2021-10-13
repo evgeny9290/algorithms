@@ -50,7 +50,7 @@ def rod_cut(n, c):
     for cut in cache_rod_cuts[n]:
         res[cut] += 1
 
-    return cache[n], dict(res)
+    return cache[n], res
 
 
 for i in range(1, 30):
