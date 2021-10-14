@@ -142,7 +142,7 @@ def munkres_matrix(mat):
 
     # step 3 - while coverage line of zeros is less then matrix size
     marked_row, marked_col = coverage_zero_lines(processing_matrix)
-    while sum(marked_row + marked_col) != mat.shape[0]:
+    while (sum(marked_row) + sum(marked_col)) != mat.shape[0]:
         # go to step 4 - shift zeros + step 3 again.
         shift_zeros(processing_matrix, marked_row, marked_col)
         marked_row, marked_col = coverage_zero_lines(processing_matrix)
@@ -154,7 +154,12 @@ def munkres_matrix(mat):
 
 if __name__ == '__main__':
 
-    mat = np.random.randint(0,20, size=(100, 100))
+    # mat = np.random.randint(0,20, size=(100, 100))
+    mat = np.array([[5,5,20,2,6],
+                    [7,4,2,3,4],
+                    [9,3,5,15,3],
+                    [7,2,6,7,2],
+                    [6,5,7,9,1]])
     pairs = munkres_matrix(mat)
     summer_time = 0
     print(pairs)

@@ -5,7 +5,7 @@ def single_machine_unweighted(tasks):
     final_times = sorted(tasks.values(), key=lambda t: t.end)
     res = [final_times[0]]
     for task in final_times[1:]:
-        if task.start > res[-1].end:
+        if task.start >= res[-1].end:
             res.append(task)
 
     return res

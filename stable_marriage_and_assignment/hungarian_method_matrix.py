@@ -123,9 +123,14 @@ def calc_minimum_cost(matrix, positions):
 
 
 if __name__ == '__main__':
-    mat = np.random.randint(1, 100, size=(1500, 1500))
+    mat = np.array([[5,5,20,2,6],
+                    [7,4,2,3,4],
+                    [9,3,5,15,3],
+                    [7,2,6,7,2],
+                    [6,5,7,9,1]])
     print(mat)
     match = hungarian_matrix_method(mat.copy())
+    print(match)
     # print(match)
     # print('##########################')
     ans,ans_mat = calc_minimum_cost(mat, match)
