@@ -1,4 +1,4 @@
-from Graph_package.flow_graph import FlowGraph
+from graph_package.flow_graph import FlowGraph
 from flow_ford_fulkerson import *
 import pandas as pd
 from collections import defaultdict

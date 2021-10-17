@@ -1,4 +1,4 @@
-from Graph_package.graph import Graph
+from graph_package.graph import Graph
 
 peterson_graph = {
     0: {4: 1, 5: 1, 1: 1},

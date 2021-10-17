@@ -104,5 +104,5 @@ if __name__ == '__main__':
     res = s.comp_max_tasks()
     for x in res:
         print(x)
-    print(s.comp_min_resources())
-    s.show_sched_multiple_showers()
+    # print(s.comp_min_resources())
+    # s.show_sched_multiple_showers()

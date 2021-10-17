@@ -1,4 +1,4 @@
-from Graph_package.graph import Graph
+from graph_package.graph import Graph
 import math
 
 

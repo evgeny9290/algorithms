@@ -1,4 +1,4 @@
-from Graph_package.flow_graph import FlowGraph
+from graph_package.flow_graph import FlowGraph
 import math
 
 

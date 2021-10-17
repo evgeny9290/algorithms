@@ -1,4 +1,4 @@
-from Graph_package.graph import Graph
+from graph_package.graph import Graph
 from topological_sort import topological_sort, dfs
 import math
 

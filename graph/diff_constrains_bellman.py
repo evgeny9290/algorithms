@@ -1,6 +1,6 @@
 from bellman_ford import *
 import pandas as pd
-from Graph_package.graph import Graph
+from graph_package.graph import Graph
 from collections import defaultdict
 
 if __name__ == '__main__':

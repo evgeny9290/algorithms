@@ -1,6 +1,6 @@
 from bellman_ford import *
 import math
-from Graph_package.graph import Graph
+from graph_package.graph import Graph
 from copy import deepcopy
 
 
