@@ -12,13 +12,9 @@ class PrecSchedule:
             self.file_name = file_name
             self.fi_list, self.pi_list, self.adj_mat = self.__init_csv()
             self.graph = self.__graph_init(graph)
-        else:
-            self.file_name = None
-            self.fi_list, self.pi_list, self.adj_mat = None, None, None
-            self.graph = None
 
     def __init_csv(self):
-        data_frame = pd.read_csv('Data/' + self.file_name)
+        data_frame = pd.read_csv(self.file_name)
         data_frame_fi = list(map(lambda x: float(x), data_frame.columns.values))
         data_frame_pi = list(map(lambda x: int(x), data_frame.iloc[0]))
         data_frame_adj_matrix = data_frame.to_numpy()[1:]
@@ -78,7 +74,6 @@ class PrecSchedule:
         prec_mat_adj = prec_df.to_numpy()
 
         combined_adj_mat = PrecSchedule.__concat_matrices(left_mat=first.adj_mat, right_mat=prec_mat_adj, diag_mat=second.adj_mat)
-        print(combined_adj_mat)
         combined_fi = first.fi_list + second.fi_list
         combined_pi = first.pi_list + second.pi_list
 
@@ -93,7 +88,6 @@ class PrecSchedule:
 
     @staticmethod
     def __concat_matrices(left_mat, diag_mat, right_mat):
-        print(left_mat.shape, right_mat.shape)
         zero_pad = np.zeros(shape=(diag_mat.shape[0], diag_mat.shape[0]), dtype=int)
         upper_mat = np.concatenate((left_mat, right_mat), axis=1)
         lower_mat = np.concatenate((zero_pad, diag_mat), axis=1)
@@ -188,7 +182,7 @@ class PrecSchedule:
 
 if __name__ == '__main__':
     g_fry = Graph(kind='list', directed=True)
-    fry = PrecSchedule('Fry.csv', g_fry)
+    fry = PrecSchedule('Data/Fry.csv', g_fry)
     sched_fry = fry.compute_schedule()
     # for x in sched_fry:
     #     print(x.key, end=' ')
@@ -196,7 +190,7 @@ if __name__ == '__main__':
     # fry.display_graph()
 
     g_leela = Graph(kind='list', directed=True)
-    leela = PrecSchedule('Leela.csv', g_leela)
+    leela = PrecSchedule('Data/Leela.csv', g_leela)
     sched_leela = leela.compute_schedule()
     # for x in sched_leela:
     #     print(x.key, end=' ')
