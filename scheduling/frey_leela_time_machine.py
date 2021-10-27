@@ -73,7 +73,9 @@ class PrecSchedule:
         prec_df = pd.read_csv(prec_mat, header=None)
         prec_mat_adj = prec_df.to_numpy()
 
-        combined_adj_mat = PrecSchedule.__concat_matrices(left_mat=first.adj_mat, right_mat=prec_mat_adj, diag_mat=second.adj_mat)
+        combined_adj_mat = PrecSchedule.__concat_matrices(left_mat=first.adj_mat,
+                                                          right_mat=prec_mat_adj,
+                                                          diag_mat=second.adj_mat)
         combined_fi = first.fi_list + second.fi_list
         combined_pi = first.pi_list + second.pi_list
 
