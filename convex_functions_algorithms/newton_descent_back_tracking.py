@@ -1,12 +1,10 @@
 import math
 from functools import wraps
-
-import matplotlib.pyplot as plt
 import pylab
 import numpy as np
 import numdifftools as nd
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+
 
 
 def my_timer(orig_fun):
@@ -20,13 +18,7 @@ def my_timer(orig_fun):
         return result, time_took
     return wrapper
 
-
-def const_t(x0, f, print_steps=False):
-    t = 0.05
-    if print_steps: print(f"new t = {t}")
-    return t
-
-def gradient_descent_plot3D(f, f_vals, X_vals):
+def newton_gradient_descent_plot3D(f, f_vals, X_vals):
     """ plot a 3D graph of the intire function shape with scatter points
         of the result of gradient descent iterations.
 
@@ -45,7 +37,7 @@ def gradient_descent_plot3D(f, f_vals, X_vals):
     ax.scatter(xs=np.array(X_vals)[:, 0], ys=np.array(X_vals)[:, 1], zs=f_vals, color='red', lw=5)
     plt.show()
 
-def convergence_plot(f_vals):
+def newton_convergence_plot(f_vals):
     """plot the convergence process of the algorithm
 
     :param f_vals: list of the z values along the algorithm process
@@ -57,14 +49,7 @@ def convergence_plot(f_vals):
     ax.set_yscale('log')
     pylab.show()
 
-def print_backtrack_steps(f, x0, t, del_x, alpha):
-    print(f"f(x0 + t*" + u"\u0394" + "x" + f") = f({np.round(x0, 4)} + {t}*{np.round(del_x, 4)}) = {np.round(f(x0 + t * del_x),4)} > "
-          f"f(x0) + " + u"\u03B1" + " * t * " + u"\u2207" + "f"  + u"\u0394" + "x" + " = "
-          f"{np.round(f(x0), 4)} + {alpha} * {t} * {np.round(np.dot(nd.Gradient(f)(x0), del_x), 4)} = "
-          f"{np.round(f(x0) + alpha * t * np.dot(nd.Gradient(f)(x0), del_x), 4)}")
-
-
-def GD_backtrack(x0, f, alpha=0.5, beta=0.7,print_steps=True):
+def newton_backtrack(x0, f, alpha=0.5, beta=0.7):
     """backtrack the guess back such that the result is inside the convex area
 
     Args:
@@ -75,19 +60,18 @@ def GD_backtrack(x0, f, alpha=0.5, beta=0.7,print_steps=True):
     Returns:
         t: the step size needed in order to return to the convex area
     """
-    t=0.08
-    del_x = -nd.Gradient(f)(x0)
-    while f(x0 + t*del_x) > f(x0) + alpha * t * np.dot(nd.Gradient(f)(x0), del_x):
-        if print_steps: print_backtrack_steps(f, x0, t, del_x, alpha)
-        t *= beta
-        if print_steps: print(f"new t = {t}")
-    if print_steps: print_backtrack_steps(f, x0, t, del_x, alpha)
-
+    t = 1
     return t
 
+
+def second_order_aprox(f, x0):
+    return 0.5 * (nd.Gradient(f)(x0).T @ \
+           np.linalg.inv(nd.Hessian(f)(x0)) @ nd.Gradient(f)(x0))
+
 @my_timer
-def gradient_descent(x0, f, epsilon, line_search=GD_backtrack, max_iters=1000, print_steps=True):
+def newton_gradient_descent(x0, f, epsilon, line_search=newton_backtrack, max_iters=1000):
     """ works of convex functions to find the best parameters for the minimum.
+        with second order Tylor approximation
 
     :param x0: initial guess
     :param f: function
@@ -96,25 +80,20 @@ def gradient_descent(x0, f, epsilon, line_search=GD_backtrack, max_iters=1000, p
     :return: [variable value that gives the minimum,
               list of variables along the algorithm process]
     """
-    del_x = -nd.Gradient(f)(x0)
+    del_x = -np.linalg.inv(nd.Hessian(f)(x0)) @ nd.Gradient(f)(x0)
     t = 1
     points_arr = [x0]
     iters = 1
-    while math.sqrt(np.dot(del_x, del_x)) > epsilon and iters <= max_iters:
-        del_x = np.round(-nd.Gradient(f)(x0),4)
-        if print_steps:
-            print(f'\niter number: {iters}')
-            print(u"\u0394" + "x" + f" = -" + u"\u2207" + f'f(x0) = {del_x}')
-        t = line_search(x0, f, print_steps=print_steps)
+    while second_order_aprox(f, x0) > epsilon and iters <= max_iters:
+        del_x = -np.linalg.inv(nd.Hessian(f)(x0)) @ nd.Gradient(f)(x0)
+        t = line_search(x0, f)
         x0 = x0 + t * del_x
-        if print_steps:
-            print(f'x0 = x0 + t * ' + u"\u0394" + "x" + f' = {np.round(x0,4)}')
         points_arr.append(x0)
         iters += 1
     return x0, points_arr
 
 
-def GD_f_vals_from_grad_descent(f, cords_list):
+def newton_f_vals_from_grad_descent(f, cords_list):
     f_vals = []
     for cords in cords_list:
         f_vals.append(f(cords))
@@ -126,10 +105,9 @@ def GD_f_vals_from_grad_descent(f, cords_list):
 if __name__ == '__main__':
     f = lambda x: x[0]**4 + x[1]**2
     x0 = [1, 1]
-    result, time = gradient_descent(x0, f, 1e-3, line_search=GD_backtrack, max_iters=3, print_steps=True)
+    result, time = newton_gradient_descent(x0, f, 1e-3, line_search=newton_backtrack, max_iters=100000)
     X_min, X_vals = result
-    f_vals = GD_f_vals_from_grad_descent(f, X_vals)
+    f_vals = newton_f_vals_from_grad_descent(f, X_vals)
 
-    convergence_plot(f_vals)
-    gradient_descent_plot3D(f, f_vals, X_vals)
-
+    newton_convergence_plot(f_vals)
+    newton_gradient_descent_plot3D(f, f_vals, X_vals)
