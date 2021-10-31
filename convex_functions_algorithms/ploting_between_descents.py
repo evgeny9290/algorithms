@@ -6,7 +6,7 @@ if __name__ == '__main__':
     f = lambda x: x[0]**4 + x[1]**2
     x0 = [1, 1]
 
-    epsilons = np.linspace(1e-3, 1e-4, 30)
+    epsilons = np.linspace(1e-3, 1e-4, 20)
     GD_times = []
     N_times = []
     i = 1
