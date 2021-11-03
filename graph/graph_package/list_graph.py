@@ -78,7 +78,8 @@ class AdjListGraph(GraphInterface):
         # if self.directed:
         #     return outgoing_neighbors
 
-        return list(set(outgoing_neighbors))
+        # return list(set(outgoing_neighbors))
+        return outgoing_neighbors
 
     def remove_vertex(self, v):
         """

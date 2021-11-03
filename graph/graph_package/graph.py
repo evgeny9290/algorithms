@@ -3,20 +3,30 @@ from .list_graph import AdjListGraph
 
 
 class Graph:
-    def __init__(self,graph=None, kind='list', mat_size=10, directed=False):
+    def __init__(self, graph=None, graph_with_weight_vertex=None, kind='list', mat_size=10, directed=False):
         super().__init__()
         if kind == 'matrix':
             self.kind = AdjMatrixGraph(max_size=mat_size, directed=directed)
         elif kind == 'list':
             self.kind = AdjListGraph(directed=directed)
-        if graph is not None:
-            self.__construct_graph(graph)
+        # if graph is not None:
+        #     self.__construct_graph_weighless(graph)
+        if graph_with_weight_vertex is not None and graph is not None:
+            self.__construct_graph_weighted_vertex(graph_with_weight_vertex, graph)
+        elif graph is not None and graph_with_weight_vertex is None:
+            self.__construct_graph_weighless(graph)
 
     def __str__(self):
         return self.kind.__str__()
 
     def get_vertices_keys(self):
         return self.kind.get_vertices_keys()
+
+    def get_vertex_by_name(self, name):
+        return self.kind.vertexes[name]
+
+    def get_distance(self, src, dst):
+        return self.kind.graph[src][dst]
 
     def get_edges(self):
         return self.kind.get_edges()
@@ -108,9 +118,16 @@ class Graph:
 
         return dfs_helper(self.get_vertices_list()[0].key, None)
 
-    def __construct_graph(self, graph):
+    def __construct_graph_weighless(self, graph):
         for k in graph.keys():
             self.add_vertex(k)
+        for src, neighbors in graph.items():
+            for dst, w in neighbors.items():
+                self.add_edge(src, dst, w)
+
+    def __construct_graph_weighted_vertex(self, graph_with_weight_vertex, graph):
+        for k, data in graph_with_weight_vertex.items():
+            self.add_vertex(k, data)
         for src, neighbors in graph.items():
             for dst, w in neighbors.items():
                 self.add_edge(src, dst, w)

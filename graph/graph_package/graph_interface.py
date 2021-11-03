@@ -51,6 +51,23 @@ class Vertex:
         self.idx = idx
         self.weight = weight
 
+    def __str__(self):
+        return f'name: {self.key}, value: {self.weight}'
+
+    def __eq__(self, other):
+        return self.key == other.key
+
+    def __le__(self, other):
+        return self.weight <= other.weight
+
+    def __lt__(self, other):
+        return self.weight < other.weight
+
+    def __ge__(self, other):
+        return not self.__lt__(other)
+
+    def __gt__(self, other):
+        return not self.__le__(other)
 
 class Edge:
     def __init__(self, src, dst, weight=1):
