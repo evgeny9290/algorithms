@@ -53,12 +53,11 @@ def reconstruct_path(parent_dict, target):
 
 
 if __name__ == '__main__':
-
     test_graph = {'s': {'t': 3, 'y': 5},
                   't': {'y': 2, 'x': 6},
-                  'x': {'z': -22},
-                  'z': {'x': 7},
-                  'y': {'t': 1, 'z': 6}
+                  'x': {'z': 11},
+                  'z': {'x': 7, 's': 3},
+                  'y': {'t': -1, 'x': 4, 'z': 6}
                   }
 
     g = Graph(kind='list', directed=True)
@@ -67,4 +66,6 @@ if __name__ == '__main__':
             g.add_edge(src, dst, w)
 
     print(g)
-    print(bellman_ford(g, 's'))
+    path = bellman_ford(g, 's')
+    print(path)
+    print(reconstruct_path(path, 't'))

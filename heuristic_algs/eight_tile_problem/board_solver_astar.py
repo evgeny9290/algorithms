@@ -22,6 +22,7 @@ def reconstruct_path(src):
         src = src.parent
     return result[::-1]
 
+
 @my_timer
 def a_star(start, target, eps=1):
     start.g = 0
@@ -61,9 +62,8 @@ if __name__ == '__main__':
         [7, 0, 5]
     ])
 
-    start = BoardState(mat=s, target=t, heuristic='mismatch')
-    end = BoardState(mat=t, heuristic='mismatch')
+    start = BoardState(mat=s, target=t, heuristic='manhattan')
+    end = BoardState(mat=t, heuristic='manhattan')
     result = a_star(start, end, eps=1)
     for i, x in enumerate(result):
-        print(f'step: {i+1}\n {x}')
-        print()
+        print(f'step: {i+1}\n {x}', end='\n\n')
